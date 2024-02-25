@@ -1,3 +1,9 @@
+# 获取当前日期和时间
+$currentDateTime = Get-Date -Format "mm:ss.fff"
+
+# 打印当前日期和时间
+Write-Host "开始时间: $currentDateTime"
+
 # 设置你的项目源代码和构建目录
 $sourceDir = "D:\Project\C++"
 $buildDir = "D:\Project\C++\build"
@@ -21,3 +27,9 @@ Get-ChildItem -Recurse | Remove-Item -Recurse -Force
 
 # 切换回项目目录
 Set-Location $sourceDir
+
+# 获取当前日期和时间
+$currentDateTime = Get-Date -Format "mm:ss.fff"
+
+# 打印当前日期和时间
+Write-Host "结束时间: $currentDateTime"

@@ -4,3 +4,5 @@
 data
 .exe
 build
+lib
+bin
