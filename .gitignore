@@ -38,3 +38,11 @@ bin
 *.exe
 *.out
 *.app
+# 这是git忽略文件
+
+.vscode
+data
+.exe
+build
+lib
+bin
