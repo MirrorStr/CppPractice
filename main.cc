@@ -12,9 +12,20 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
+
+// #include "Head.hh"
+#include "Api.hh"
 
 using namespace std;
-  
+
+
+struct Test
+{
+    vector<int> vecNum;
+};
+
+
 /**
  * @brief 
  * 
@@ -22,9 +33,48 @@ using namespace std;
  */
 int main()
 {
+    /* 测试声明和定义分离 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    // FuncInHead();
+    UseHeadFunc();
+    /* ┗─────────────────────────────────────────────────────────────────┚ */
+
+    /* 测试容器结构体是否会变化大小 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    // Test stData, stMiniD, stLarge,stMax;
+    // int iNum[5] = {1, 2, 3, 4, 5};
+    // int iBigNum[6] = {1, 2, 3, 4, 5, 6};
+    // int iMax[100] = {0};
+    // stData.vecNum.assign(iNum, iNum+5);
+    // stMiniD.vecNum.assign(iNum, iNum+2);
+    // stLarge.vecNum.assign(iBigNum, iBigNum+6);
+    // stMax.vecNum.assign(iMax, iMax+100);
+
+    // cout << "stData size: " << sizeof(stData) 
+    //      << "\nTest struct size: " << sizeof(Test) 
+    //      << "\n stMiniD size: " << sizeof(stMiniD) 
+    //      << "\n Test struct size(2cd times):" << sizeof(Test)
+    //      << "\n stLarge size: " << sizeof(stLarge) 
+    //      << "\n Test struct size(3rd times):" << sizeof(Test)
+    //      << "\n stMax size: " << sizeof(stMax) 
+    //      << "\n Test struct size(4th times):" << sizeof(Test) << endl; 
+
+    /* 结论： */
+    /* 无论成员怎么变化，结构体对象的大小都是固定的。因为其容器类似指针只是数据的地址实际上并不在这。 */
+    /* ┗─────────────────────────────────────────────────────────────────┚ */
+
+    /* 测试string转int */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    // std::string strHex = "37";
+    // int iHex = stoi(strHex);
+
+    // std::cout << iHex << std::endl;
+
+    /* ┗─────────────────────────────────────────────────────────────────┚ */
+
     /*  */
     /* ┎─────────────────────────────────────────────────────────────────┒ */
-    std::cout << "Hello World" << std::endl;
+    // std::cout << "Hello World" << std::endl;
     /* ┗─────────────────────────────────────────────────────────────────┚ */
 
     
@@ -73,4 +123,9 @@ int main()
     /* ┗─────────────────────────────────────────────────────────────────┚ */
   
     return 0;
+}
+
+void FuncInHead(void)
+{
+    std::cout << "This is a funcation declra in Head.hh but define in main.cc." << std::endl;
 }
