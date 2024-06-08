@@ -13,6 +13,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <sstream>
 
 // #include "Head.hh"
 #include "Api.hh"
@@ -33,10 +34,36 @@ struct Test
  */
 int main()
 {
+
+    #if 1
+    /*  */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    
+    /* 结论： */
+    /* ┗─────────────────────────────────────────────────────────────────┚ */
+    #endif
+
+    #if 0
+    /* 测试int转换string */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    int iNum = 7;
+    std::stringstream ssTemp;
+    std::string strTemp;
+
+    ssTemp << iNum;
+    strTemp = std::to_string(iNum);
+    std::cout << "Convert 'int' to string by 'stringsstream':" << ssTemp.str() << std::endl;
+    std::cout << "Convert 'int' to string by 'to_string()': " << strTemp << std::endl;
+    /* 结论：都可以啊，不i错不错 */
+
+    /* ┗─────────────────────────────────────────────────────────────────┚ */
+    #endif
+
+
     /* 测试声明和定义分离 */
     /* ┎─────────────────────────────────────────────────────────────────┒ */
     // FuncInHead();
-    UseHeadFunc();
+    // UseHeadFunc();
     /* 结论： */
     /**
      *  定义在其他文件中是可以用的，我这边是通过子模块的函数间接使用一个声明在头文件但是定义在此的函数
