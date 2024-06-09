@@ -1,1 +1,1 @@
-& .\build\main.exe
+& .\bin\main.exe
