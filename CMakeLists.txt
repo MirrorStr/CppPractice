@@ -1,14 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(C++)
+project(C++)    # 设置项目名称
+
+add_subdirectory(src)   # 添加子目录
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin")     # 设置可执行文件输出目录
 
 add_executable(main main.cc)
 
-string(TIMESTAMP COMPILE_TIME "%Y-%m-%d %H:%M:%S" UTC)
+target_link_libraries(main PUBLIC src)  # 链接库
 
-message(${COMPILE_TIME})
-
-# add_custom_target(measure_compile_time ALL
-#   COMMAND ${CMAKE_COMMAND} --build .
-#   COMMAND ${CMAKE_COMMAND} -E echo "Compile took: $<TARGET_PROPERTY:compile_time,TIME>"
-#   )
+target_include_directories(main PUBLIC ${PROJECT_SOURCE_DIR}/include)

@@ -1,8 +1,5 @@
 # 获取当前日期和时间
-$currentDateTime = Get-Date -Format "mm:ss.fff"
-
-# 打印当前日期和时间
-Write-Host "开始时间: $currentDateTime"
+$startTime = Get-Date
 
 # 设置你的项目源代码和构建目录
 $sourceDir = "D:\Project\C++"
@@ -20,16 +17,18 @@ Set-Location $buildDir
 Get-ChildItem -Recurse | Remove-Item -Recurse -Force
 
 # 运行CMake配置（生成Makefile或Visual Studio项目文件）
-& cmake -G "MinGW Makefiles" $sourceDir
+# & cmake -G "MinGW Makefiles" $sourceDir
+& cmake $sourceDir  # 已经设置好了环境变量，不用加-G 了
 
-#编译
+# 编译
 & cmake --build $buildDir
 
 # 切换回项目目录
 Set-Location $sourceDir
 
 # 获取当前日期和时间
-$currentDateTime = Get-Date -Format "mm:ss.fff"
+$endTime = Get-Date
 
-# 打印当前日期和时间
-Write-Host "结束时间: $currentDateTime"
+# 打印总耗时
+$duration = New-TimeSpan -Start $startTime -End $endTime
+Write-Host "总耗时: $duration"

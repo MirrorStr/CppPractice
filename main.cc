@@ -12,9 +12,21 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
+#include <sstream>
+
+// #include "Head.hh"
+#include "Api.hh"
 
 using namespace std;
-  
+
+
+struct Test
+{
+    vector<int> vecNum;
+};
+
+
 /**
  * @brief 
  * 
@@ -22,9 +34,79 @@ using namespace std;
  */
 int main()
 {
+
+    #if 1
     /*  */
     /* ┎─────────────────────────────────────────────────────────────────┒ */
-    std::cout << "Hello World" << std::endl;
+    
+    /* 结论： */
+    /* ┗─────────────────────────────────────────────────────────────────┚ */
+    #endif
+
+    #if 1
+    /* 测试int转换string */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    int iNum = 7;
+    std::stringstream ssTemp;
+    std::string strTemp;
+
+    ssTemp << iNum;
+    strTemp = std::to_string(iNum);
+    std::cout << "Convert 'int' to string by 'stringsstream':" << ssTemp.str() << std::endl;
+    std::cout << "Convert 'int' to string by 'to_string()': " << strTemp << std::endl;
+    /* 结论：都可以啊，不i错不错 */
+
+    /* ┗─────────────────────────────────────────────────────────────────┚ */
+    #endif
+
+
+    /* 测试声明和定义分离 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    // FuncInHead();
+    // UseHeadFunc();
+    /* 结论： */
+    /**
+     *  定义在其他文件中是可以用的，我这边是通过子模块的函数间接使用一个声明在头文件但是定义在此的函数
+     *  
+     */
+    /* ┗─────────────────────────────────────────────────────────────────┚ */
+
+    /* 测试容器结构体是否会变化大小 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    // Test stData, stMiniD, stLarge,stMax;
+    // int iNum[5] = {1, 2, 3, 4, 5};
+    // int iBigNum[6] = {1, 2, 3, 4, 5, 6};
+    // int iMax[100] = {0};
+    // stData.vecNum.assign(iNum, iNum+5);
+    // stMiniD.vecNum.assign(iNum, iNum+2);
+    // stLarge.vecNum.assign(iBigNum, iBigNum+6);
+    // stMax.vecNum.assign(iMax, iMax+100);
+
+    // cout << "stData size: " << sizeof(stData) 
+    //      << "\nTest struct size: " << sizeof(Test) 
+    //      << "\n stMiniD size: " << sizeof(stMiniD) 
+    //      << "\n Test struct size(2cd times):" << sizeof(Test)
+    //      << "\n stLarge size: " << sizeof(stLarge) 
+    //      << "\n Test struct size(3rd times):" << sizeof(Test)
+    //      << "\n stMax size: " << sizeof(stMax) 
+    //      << "\n Test struct size(4th times):" << sizeof(Test) << endl; 
+
+    /* 结论： */
+    /* 无论成员怎么变化，结构体对象的大小都是固定的。因为其容器类似指针只是数据的地址实际上并不在这。 */
+    /* ┗─────────────────────────────────────────────────────────────────┚ */
+
+    /* 测试string转int */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    // std::string strHex = "37";
+    // int iHex = stoi(strHex);
+
+    // std::cout << iHex << std::endl;
+
+    /* ┗─────────────────────────────────────────────────────────────────┚ */
+
+    /*  */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    // std::cout << "Hello World" << std::endl;
     /* ┗─────────────────────────────────────────────────────────────────┚ */
 
     
@@ -73,4 +155,9 @@ int main()
     /* ┗─────────────────────────────────────────────────────────────────┚ */
   
     return 0;
+}
+
+void FuncInHead(void)
+{
+    std::cout << "This is a funcation declra in Head.hh but define in main.cc." << std::endl;
 }
