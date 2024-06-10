@@ -15,6 +15,8 @@
 #include <vector>
 #include <sstream>
 
+#include "json/json.h"
+
 // #include "Head.hh"
 #include "Api.hh"
 
@@ -34,16 +36,22 @@ struct Test
  */
 int main()
 {
-
     #if 1
-    /*  */
+    /* 测试Json库 */
     /* ┎─────────────────────────────────────────────────────────────────┒ */
+    /**
+     * @attention 目前使用静态库编译，如果不包含静态库可能编译不通过。 
+     * 
+     */
+    Json::Value jsTest;
+    jsTest["Meb1"] = "Hello Json!";
+    std::cout << "jsTest:" << jsTest["Meb1"].asString() << std::endl;
     
     /* 结论： */
     /* ┗─────────────────────────────────────────────────────────────────┚ */
     #endif
 
-    #if 1
+    #if /* 1 */     0
     /* 测试int转换string */
     /* ┎─────────────────────────────────────────────────────────────────┒ */
     int iNum = 7;
