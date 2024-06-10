@@ -9,30 +9,17 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin")     # 设置可�
 # 头文件路径
 include_directories(${PROJECT_SOURCE_DIR}/include/jsoncpp)
 
-##################
-# 使用静态库
-# link_directories(${PROJECT_SOURCE_DIR}/lib/jsoncpp)
-############
-
-###########
-# 使用动态库
+# 使用动态库 查找json库
 find_library(JSONCPP_LIBRARY
              NAMES jsoncpp
              HINTS ${PROJECT_SOURCE_DIR}/lib/jsoncpp)
-###########
 
 add_executable(main main.cc)
 
 target_link_libraries(main PUBLIC src)  # 链接库
 
-###########
-# 静态库
-# target_link_libraries(main PRIVATE jsoncpp)
-########
-# 使用动态库
+# 使用动态库 继续添加json库
 target_link_libraries(main PRIVATE ${JSONCPP_LIBRARY})
-##############
-
 
 target_include_directories(main PUBLIC ${PROJECT_SOURCE_DIR}/include)
 

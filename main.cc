@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <windows.h>
 
 #include "json/json.h"
 
