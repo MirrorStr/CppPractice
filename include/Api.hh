@@ -6,5 +6,6 @@
 #include "Head.hh"
 
 void UseHeadFunc(void);
+void LoadSharedLib(void);
 
 #endif

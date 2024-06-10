@@ -22,13 +22,6 @@
 
 using namespace std;
 
-
-struct Test
-{
-    vector<int> vecNum;
-};
-
-
 /**
  * @brief 
  * 
