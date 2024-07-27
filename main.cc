@@ -1,21 +1,23 @@
 /**
  * @file main.cc
  * @author wanjuncong (Magcil7@outlook.com)
- * @brief 
+ * @brief
  * @version 0.1
  * @date 2024-02-24
- * 
+ *
  * @copyright Copyright (c) WANJUNCONG 2024
- * 
+ *
  */
 
-#include <iostream>
+#include <algorithm>
+// #include <comdef.h> /* wcout需要用到的头文件 */
 #include <fstream>
+#include <iostream>
+#include <locale.h>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <sstream>
 #include <windows.h>
-#include <fstream>
 
 #include "json/json.h"
 
@@ -23,15 +25,342 @@
 
 using namespace std;
 
-/**
- * @brief 
- * 
- * @return int 
- */
-int main()
-{
+// void copy_to_clipboard(const std::string &text) {
+//     if (OpenClipboard(NULL)) {
+//         HGLOBAL hMem = GlobalAlloc(GMEM_ZEROINIT, text.size() + 1);
+//         std::cout << "[Debug]:text.size:" << text.size() << std::endl;
+//         if (hMem) {
+//             LPSTR pMem = (LPSTR)GlobalLock(hMem);
+//             memcpy(pMem, text.c_str(), text.size() + 1);
+//             GlobalUnlock(hMem);
 
-    #if 1
+//             EmptyClipboard();
+//             SetClipboardData(CF_TEXT, hMem);
+//         }
+//         CloseClipboard();
+//     } else {
+//         std::cerr << "Failed to open clipboard." << std::endl;
+//     }
+// }
+
+/* 剪贴板2 */
+void copy_to_clipboard(const std::string &text) {
+    const size_t text_length = text.length();
+    HGLOBAL hGlobalMemory =
+        GlobalAlloc(GMEM_MOVEABLE, (text_length + 1) * sizeof(TCHAR));
+    if (hGlobalMemory == NULL) {
+        return; // 内存分配失败
+    }
+
+    LPCTSTR lptstrBuffer = (LPCTSTR)GlobalLock(hGlobalMemory);
+    memcpy((void *)lptstrBuffer, text.c_str(),
+           (text_length + 1) * sizeof(TCHAR));
+    GlobalUnlock(hGlobalMemory);
+
+    if (!OpenClipboard(NULL)) {
+        GlobalFree(hGlobalMemory); // 打开剪贴板失败，释放内存
+        return;
+    }
+
+    EmptyClipboard();                         // 清空剪贴板
+    SetClipboardData(CF_TEXT, hGlobalMemory); // 设置剪贴板数据
+    CloseClipboard();                         // 关闭剪贴板
+
+    // 注意：以下代码行可能不是必要的，因为 hGlobalMemory 已经通过
+    // SetClipboardData 传递给了剪贴板 GlobalFree(hGlobalMemory); //
+    // 释放内存，剪贴板已经接管了这块内存
+}
+
+/**
+ * @brief
+ *
+ * @return int
+ */
+int main() {
+
+#if 0
+/* 光标移动测试 */
+/* ┎─────────────────────────────────────────────────────────────────┒ */
+int dawd
+int awdawdwa
+int aw
+int adwdawdawdwadwa
+/* 结论： */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+#if 0
+    /* 三目运算符测试 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    int a = 1, b = 2, c = 3, d = 4, e = 5;
+
+    auto k = a > b ? c : d > e ? d : e;
+
+    std::cout << k << std::endl;
+    // d:\Project\C++\CMakeLists.txt
+
+/* 结论： */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+#if 0
+    /* json解析优化测试 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    Json::Value jsRoot;
+    try {
+        int iNum = jsRoot["Meb1"].asInt();
+        bool bCheck = jsRoot["Meb2"].asBool();
+        std::cout << "iNum:" << iNum << "\tbCheck:" << bCheck << std::endl;
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << '\n';
+    }
+
+/* 结论： */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+#if 0
+    /* 中文字符二进制查看 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+
+    std::string strIntput;
+
+    do {
+        std::getline(std::cin, strIntput);
+        if (("q" == strIntput) || ("Q" == strIntput)) {
+            std::cout << "Exit!" << std::endl;
+            break;
+        }
+        std::cout << "========================" << std::endl;
+        for (int i = 0; i < strIntput.length(); ++i) {
+            std::cout << "[" << i + 1 << "]" << strIntput[i] << "\t"
+                      << static_cast<int>(strIntput[i]) << std::endl;
+        }
+        std::cout << "========================" << std::endl;
+    } while (true);
+
+/* 结论： */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+#if 0
+    /* 测试将长内容中文写道文件中去。 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    std::ofstream outFile("D:\\Project\\C++\\data\\outfile.txt");
+    if (!outFile.is_open()) {
+        std::cout << "Can't open 'outfile.txt'!" << std::endl;
+        return -1;
+    }
+
+    /* 手动写长内容string */
+    // std::string strLongContent =
+    //     "发展思维科学的又一个效果是使我们懂得如何更充分地发挥人脑的能力。比如人"
+    //     "脑有创造的能力，这不是逻辑推理而是思想的飞跃，是所谓“灵感”。当然灵感也"
+    //     "是从实践经验的总结提高得来的，要不是从实践当中来，小孩子刚一生下来不就"
+    //     "能灵感一番，就能创造了吗？没有这样的事。而且创造的能力、灵感，是无法说"
+    //     "清楚和无法教学生的。";
+
+    /* 命令行获取内容 */
+    std::string strLongContent;
+    std::string line;
+    while (std::getline(std::cin, line)) {
+        if ("q" == line) {
+            break;
+        }
+        strLongContent += line;
+    }
+
+    outFile << strLongContent << std::endl;
+    outFile.close();
+    std::cout << "Done!" << std::endl;
+/* 结论： 命令行输入还是不行啊，乱码*/
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+#if 0
+    /* 使用中文 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+
+    string str = "string:C++技术网www.cjjjs.com";
+    cout << str.c_str() << endl;
+
+    wstring wstr = L"wstring:C++技术网www.cjjjs.com";
+    setlocale(LC_ALL, "chs"); // 设置wcout输出中文
+    wcout << wstr.c_str() << endl;
+/* 结论： */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+#if 0
+    /* 测试输出宽字符 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+
+    std::wstring wstrTemp = L"打完后丢啊我不hi都";
+    setlocale(LC_ALL, "zh_CN.UTF-8"); // 设置wcout输出中文
+    std::wcout << wstrTemp << std::endl;
+    std::cout << "dawdadwdawd" << std::endl;
+/* 结论： */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+#if 0
+    /* 复制到剪贴板测试 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    // 将要复制到剪贴板的字符串
+    /* 手动给一长串内容，验证不会截断 */
+    //     std::string textToCopy =
+    //         "As the amount of information we have access to grows, such
+    //         experiences\
+// are becoming more and more common. We're flooded with more advice than\
+// ever promising to make us smarter, healthier, and happier. We consume
+    // more\
+// books, podcasts, articles, and videos than we could possibly absorb. What
+    // do\
+// we really have to show for all the knowledge we've gained? How many of\
+// the great ideas we've had or encountered have faded from our minds
+    // before\ we even had a chance to put them into practice?";
+
+    /* 按q退出 */
+    // std::string line;
+    // std::string strTemp;
+    // while (std::getline(std::cin, line)) {
+    //     if ("q" == line) {
+    //         break;
+    //     }
+    //     strTemp += line;
+    // }
+    // std::cout << "strTemp:" << strTemp << std::endl;
+    // // std::wstring textToCopy(strTemp.begin(), strTemp.end());
+    // std::wstring textToCopy = L(strTemp);
+
+    // std::cout << "textToCopy size:" << textToCopy.size() << std::endl;
+    // std::wcout << "textToCopy:" << textToCopy << std::endl;
+
+    // std::wstring textToCopy = L"你好！"; /* 较短内容 */
+    std::wstring textToCopy =
+        L"的同志要把这两类各门系统工程的共同基础连同其他数学工具通称为“系\
+统工程学”，我认为这样做不一定妥当，名词和内容不相符。因为系统工程的理论\
+基础，除了共同性的基础之外，每门系统工程又有其各自的专业基础。这是因为\
+对象不同，当然要掌握不同对象本身的规律：例如工程系统工程要靠工程设计，军\
+事系统工程要靠军事科学等。这里用表把各门系统工程和与之对应的特有学科\
+基础列出来。"; /* 较长内容 */
+
+    std::wcout << "textToCopy:" << textToCopy << std::endl;
+    /* 打开剪贴板 */
+    // if (OpenClipboard(NULL)) {
+    //     // 清空剪贴板之前的内容
+    //     EmptyClipboard();
+
+    //     // 获取字符串的长度
+    //     size_t len = (textToCopy.length() + 1) *
+    //                  sizeof(wchar_t); // 计算Unicode字符串的长度
+
+    //     // 分配内存并复制内容到内存中
+    //     HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, len);
+    //     if (hMem != NULL) {
+    //         wchar_t *pMem = (wchar_t *)GlobalLock(hMem);
+    //         if (pMem != NULL) {
+    //             // 将宽字符字符串复制到内存中
+    //             memcpy(pMem, textToCopy.c_str(), len);
+    //             GlobalUnlock(hMem);
+
+    //             // 将内存中的内容放入剪贴板
+    //             SetClipboardData(CF_UNICODETEXT,
+    //                              hMem); /* CF_UNICODETEXT 使用unicode字符 */
+    //         }
+    //     }
+
+    //     // 关闭剪贴板
+    //     CloseClipboard();
+    // }
+/* 结论： */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+#if 0
+    /* 测试回车换行 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    char HuiChe = '\r';    /* 回车 */
+    char HuangHang = '\n'; /* 换行 */
+
+    std::cout << "回车:" << (int)HuiChe << "\t换行:" << (int)HuangHang
+              << std::endl;
+/* 结论： */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+#if 0
+    /* 回车删除工具测试 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+
+    std::string line;
+    std::string strInput;
+
+    // 读取多行输入，直到 EOF
+    while (std::getline(std::cin, line)) {
+        if ("q" == line) {
+            break;
+        }
+        strInput += line;
+    }
+#if 0
+    /* ASCCII打印 */
+    std::cout << "\n==================\n" << std::endl;
+    for (auto Chara : strInput) {
+        std::cout << "Chara: " << Chara
+                  << "\tASCII: " << static_cast<int>(Chara) << std::endl;
+    }
+    std::cout << "\n==================\n" << std::endl;
+#endif
+
+    std::cout << "\n==================\n" << std::endl;
+    std::cout << "[strInput]:\n" << strInput << std::endl;
+
+    /* 复制到剪贴板 */
+    copy_to_clipboard(strInput);
+    std::cout << "\n==================\n" << std::endl;
+    std::cout << "The text has been copied to the clipboard." << std::endl;
+
+    // 删除回车和换行符
+    // input.erase(std::remove(input.begin(), input.end(), '\r'), input.end());
+    // input.erase(std::remove(input.begin(), input.end(), '\n'), input.end());
+
+    // string strInput;
+    // while (true) {
+    //     std::cout << "Enter a paragraph to start (press Q to exit)"
+    //               << std::endl;
+    //     std::getline(std::cin, strInput);
+    //     if (("q" == strInput) || ("Q" == strInput)) {
+    //         std::cout << "\nQuit program." << std::endl;
+    //         std::cout << "===========================" << std::endl;
+    //         break;
+    //     }
+
+    //     for (auto Chara : strInput) {
+    //         std::cout << "Chara: " << Chara
+    //                   << "\tASCII: " << static_cast<int>(Chara) << std::endl;
+    //     }
+    // }
+
+/* 结论： */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+#if 0
+    /* clang-format测试 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    int a = 1;
+    string strb = "ad";
+    bool b = true;
+    if (1) {
+        std::cout << "sssss" << std::endl;
+    }
+
+/* 结论： */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+#if 0
     /* json文件读写 */
     /* ┎─────────────────────────────────────────────────────────────────┒ */
     /* 打开一个输出文件，没有会创建 */
@@ -94,9 +423,9 @@ int main()
        解析除json对象然后就是随便操作了。
     */
     /* ┗─────────────────────────────────────────────────────────────────┚ */
-    #endif
+#endif
 
-    #if 0
+#if 0
     /* json member测试 */
     /* ┎─────────────────────────────────────────────────────────────────┒ */
     Json::Value jsRoot;
@@ -159,9 +488,9 @@ int main()
     std::cout << "Root:" << jsRoot << std::endl;
     /* 结论： */
     /* ┗─────────────────────────────────────────────────────────────────┚ */
-    #endif
+#endif
 
-    #if 0
+#if 0
     /* 测试Json库 */
     /* ┎─────────────────────────────────────────────────────────────────┒ */
     /**
@@ -174,9 +503,9 @@ int main()
     
     /* 结论： */
     /* ┗─────────────────────────────────────────────────────────────────┚ */
-    #endif
+#endif
 
-    #if /* 1 */     0
+#if /* 1 */ 0
     /* 测试int转换string */
     /* ┎─────────────────────────────────────────────────────────────────┒ */
     int iNum = 7;
@@ -190,22 +519,24 @@ int main()
     /* 结论：都可以啊，不i错不错 */
 
     /* ┗─────────────────────────────────────────────────────────────────┚ */
-    #endif
-
+#endif
 
     /* 测试声明和定义分离 */
-    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    /* ┎─────────────────────────────────────────────────────────────────┒
+     */
     // FuncInHead();
     // UseHeadFunc();
     /* 结论： */
     /**
      *  定义在其他文件中是可以用的，我这边是通过子模块的函数间接使用一个声明在头文件但是定义在此的函数
-     *  
+     *
      */
-    /* ┗─────────────────────────────────────────────────────────────────┚ */
+    /* ┗─────────────────────────────────────────────────────────────────┚
+     */
 
     /* 测试容器结构体是否会变化大小 */
-    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    /* ┎─────────────────────────────────────────────────────────────────┒
+     */
     // Test stData, stMiniD, stLarge,stMax;
     // int iNum[5] = {1, 2, 3, 4, 5};
     // int iBigNum[6] = {1, 2, 3, 4, 5, 6};
@@ -215,36 +546,42 @@ int main()
     // stLarge.vecNum.assign(iBigNum, iBigNum+6);
     // stMax.vecNum.assign(iMax, iMax+100);
 
-    // cout << "stData size: " << sizeof(stData) 
-    //      << "\nTest struct size: " << sizeof(Test) 
-    //      << "\n stMiniD size: " << sizeof(stMiniD) 
+    // cout << "stData size: " << sizeof(stData)
+    //      << "\nTest struct size: " << sizeof(Test)
+    //      << "\n stMiniD size: " << sizeof(stMiniD)
     //      << "\n Test struct size(2cd times):" << sizeof(Test)
-    //      << "\n stLarge size: " << sizeof(stLarge) 
+    //      << "\n stLarge size: " << sizeof(stLarge)
     //      << "\n Test struct size(3rd times):" << sizeof(Test)
-    //      << "\n stMax size: " << sizeof(stMax) 
-    //      << "\n Test struct size(4th times):" << sizeof(Test) << endl; 
+    //      << "\n stMax size: " << sizeof(stMax)
+    //      << "\n Test struct size(4th times):" << sizeof(Test) << endl;
 
     /* 结论： */
-    /* 无论成员怎么变化，结构体对象的大小都是固定的。因为其容器类似指针只是数据的地址实际上并不在这。 */
-    /* ┗─────────────────────────────────────────────────────────────────┚ */
+    /* 无论成员怎么变化，结构体对象的大小都是固定的。因为其容器类似指针只是数据的地址实际上并不在这。
+     */
+    /* ┗─────────────────────────────────────────────────────────────────┚
+     */
 
     /* 测试string转int */
-    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    /* ┎─────────────────────────────────────────────────────────────────┒
+     */
     // std::string strHex = "37";
     // int iHex = stoi(strHex);
 
     // std::cout << iHex << std::endl;
 
-    /* ┗─────────────────────────────────────────────────────────────────┚ */
+    /* ┗─────────────────────────────────────────────────────────────────┚
+     */
 
     /*  */
-    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    /* ┎─────────────────────────────────────────────────────────────────┒
+     */
     // std::cout << "Hello World" << std::endl;
-    /* ┗─────────────────────────────────────────────────────────────────┚ */
+    /* ┗─────────────────────────────────────────────────────────────────┚
+     */
 
-    
     /* 测试打开文件 */
-    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    /* ┎─────────────────────────────────────────────────────────────────┒
+     */
     // std::string filePath = R"(data\subdata\subsubdata\sub_log.txt)";
     // std::ifstream file(filePath);
 
@@ -257,15 +594,17 @@ int main()
     // } else {
     //     std::cout << "无法打开文件" << std::endl;
     // }
-    /* ┗─────────────────────────────────────────────────────────────────┚ */
+    /* ┗─────────────────────────────────────────────────────────────────┚
+     */
 
     /* 不知道什么 */
-    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    /* ┎─────────────────────────────────────────────────────────────────┒
+     */
     // declaring three numbers
     // int a = 10;
     // int b = 2;
     // int c = 6;
-  
+
     // // outermost if else
     // if (a < b) {
     //     // nested if else
@@ -285,12 +624,13 @@ int main()
     //         printf("%d is the greatest", c);
     //     }
     // }
-    /* ┗─────────────────────────────────────────────────────────────────┚ */
-  
+    /* ┗─────────────────────────────────────────────────────────────────┚
+     */
+
     return 0;
 }
 
-void FuncInHead(void)
-{
-    std::cout << "This is a funcation declra in Head.hh but define in main.cc." << std::endl;
+void FuncInHead(void) {
+    std::cout << "This is a funcation declra in Head.hh but define in main.cc."
+              << std::endl;
 }
