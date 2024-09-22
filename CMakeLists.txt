@@ -1,11 +1,19 @@
+###############################################################################
+# 项目设置 #
 cmake_minimum_required(VERSION 3.10)
 
-project(C++)    # 设置项目名称
+project(Cpp-Parctice
+    VERSION 1.0
+    DESCRIPTION "用于在电脑上练习C++"
+)    # 设置项目名称
 
-add_subdirectory(src)   # 添加子目录
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin")     # 设置可执行文件输出目录
 
+###############################################################################
+# main程序设置 #
 # 头文件路径
 include_directories(${PROJECT_SOURCE_DIR}/include/jsoncpp)
 
@@ -16,10 +24,20 @@ find_library(JSONCPP_LIBRARY
 
 add_executable(main main.cc)
 
-target_link_libraries(main PUBLIC src)  # 链接库
+target_link_libraries(main PUBLIC 
+    ${JSONCPP_LIBRARY}
+
+    BasicFuncLib
+)  # 链接库
 
 # 使用动态库 继续添加json库
-target_link_libraries(main PRIVATE ${JSONCPP_LIBRARY})
+target_include_directories(main PUBLIC 
+    ${PROJECT_SOURCE_DIR}/modules/BasicFunc
+    ${PROJECT_SOURCE_DIR}/include
+)
+###############################################################################
+# 添加其他组件 #
+add_subdirectory(modules)
 
-target_include_directories(main PUBLIC ${PROJECT_SOURCE_DIR}/include)
-
+###############################################################################
+# EOF #

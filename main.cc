@@ -16,67 +16,46 @@
 #include <locale.h>
 #include <sstream>
 #include <string>
+#include <thread>
 #include <vector>
 #include <windows.h>
 
-#include "json/json.h"
+#include "json/json.h"  /* CPP json库头文件 */
 
-#include "Api.hh"
+#include "BasicFunc.hh"
 
 using namespace std;
 
-// void copy_to_clipboard(const std::string &text) {
-//     if (OpenClipboard(NULL)) {
-//         HGLOBAL hMem = GlobalAlloc(GMEM_ZEROINIT, text.size() + 1);
-//         std::cout << "[Debug]:text.size:" << text.size() << std::endl;
-//         if (hMem) {
-//             LPSTR pMem = (LPSTR)GlobalLock(hMem);
-//             memcpy(pMem, text.c_str(), text.size() + 1);
-//             GlobalUnlock(hMem);
 
-//             EmptyClipboard();
-//             SetClipboardData(CF_TEXT, hMem);
-//         }
-//         CloseClipboard();
-//     } else {
-//         std::cerr << "Failed to open clipboard." << std::endl;
-//     }
-// }
-
-/* 剪贴板2 */
-void copy_to_clipboard(const std::string &text) {
-    const size_t text_length = text.length();
-    HGLOBAL hGlobalMemory =
-        GlobalAlloc(GMEM_MOVEABLE, (text_length + 1) * sizeof(TCHAR));
-    if (hGlobalMemory == NULL) {
-        return; // 内存分配失败
-    }
-
-    LPCTSTR lptstrBuffer = (LPCTSTR)GlobalLock(hGlobalMemory);
-    memcpy((void *)lptstrBuffer, text.c_str(),
-           (text_length + 1) * sizeof(TCHAR));
-    GlobalUnlock(hGlobalMemory);
-
-    if (!OpenClipboard(NULL)) {
-        GlobalFree(hGlobalMemory); // 打开剪贴板失败，释放内存
-        return;
-    }
-
-    EmptyClipboard();                         // 清空剪贴板
-    SetClipboardData(CF_TEXT, hGlobalMemory); // 设置剪贴板数据
-    CloseClipboard();                         // 关闭剪贴板
-
-    // 注意：以下代码行可能不是必要的，因为 hGlobalMemory 已经通过
-    // SetClipboardData 传递给了剪贴板 GlobalFree(hGlobalMemory); //
-    // 释放内存，剪贴板已经接管了这块内存
-}
-
-/**
- * @brief
- *
- * @return int
- */
 int main() {
+
+    #if 1
+    /* 基础模块测试 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    HelloBasicFunc();
+    /* 结论： */
+    /* ┗─────────────────────────────────────────────────────────────────┚ */
+    #endif
+
+
+#if 0
+    /* 定时器类测试 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    Timer t(5000, DoSomething);
+    t.start(); // 开始倒计时
+
+    for (int i = 0; i < 10; i++) {
+        std::cout << "模拟其他线程做点事。次数：" << i << std::endl;
+    }
+
+    // 主线程可以继续执行其他任务
+    std::this_thread::sleep_for(std::chrono::seconds(10)); // 模拟主线程延迟
+
+    t.stop(); // 停止定时器
+    std::cout << "Timer done!" << std::endl;
+/* 结论： */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
 
 #if 0
 /* 光标移动测试 */
