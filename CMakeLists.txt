@@ -28,11 +28,13 @@ target_link_libraries(main PUBLIC
     ${JSONCPP_LIBRARY}
 
     BasicFuncLib
+    lib::WhiteBorad  # 测试用的模块
 )  # 链接库
 
 # 使用动态库 继续添加json库
 target_include_directories(main PUBLIC 
     ${PROJECT_SOURCE_DIR}/modules/BasicFunc
+    ${PROJECT_SOURCE_DIR}/modules/WhiteBorad
     ${PROJECT_SOURCE_DIR}/include
 )
 ###############################################################################

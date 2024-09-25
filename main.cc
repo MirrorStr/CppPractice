@@ -12,7 +12,9 @@
 #include <algorithm>
 // #include <comdef.h> /* wcout需要用到的头文件 */
 #include <fstream>
+#include <functional>
 #include <iostream>
+#include <iterator>
 #include <locale.h>
 #include <sstream>
 #include <string>
@@ -20,23 +22,171 @@
 #include <vector>
 #include <windows.h>
 
-#include "json/json.h"  /* CPP json库头文件 */
+#include "json/json.h" /* CPP json库头文件 */
 
 #include "BasicFunc.hh"
+#include "WhiteBorad.hh" /* 测试，验证功能用的模块 */
 
 using namespace std;
 
-
 int main() {
 
-    #if 1
+#if 1
+    /* 验证循环输入函数 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+
+    auto Temp = [](const string &strInput) {
+        std::cout << strInput << std::endl;
+    };
+
+    SwallowInput(Temp); /* 会一直循环输入，然后通过传入的函数对输入进行处理 */
+
+/* 结论： */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+#if 0
+    auto readWideInput = [](void) -> std::wstring {
+        std::vector<wchar_t> buffer;
+        wchar_t              c;
+        while (std::wcin.get(c)) {
+            if (c == L'q' || c == L'Q') {
+                break;
+            }
+            buffer.push_back(c);
+        }
+        return std::wstring(buffer.begin(), buffer.end());
+    };
+
+    // 设置控制台输出编码为 UTF-8
+    SetConsoleOutputCP(CP_UTF8);
+    // 设置控制台输入编码为 UTF-8
+    SetConsoleCP(CP_UTF8);
+
+    std::wstring strInput;
+
+    std::wcout << L"请输入文本（输入完成后按q或Q结束输入）：" << std::endl;
+    std::cout << "test" << std::endl;
+    strInput = readWideInput();
+
+    // 移除所有的换行符和回车符
+    strInput.erase(std::remove(strInput.begin(), strInput.end(), L'\n'),
+                   strInput.end());
+    strInput.erase(std::remove(strInput.begin(), strInput.end(), L'\r'),
+                   strInput.end());
+
+    std::wcout << L"\n处理后的文本：\n" << strInput << std::endl;
+
+    // 复制到剪贴板
+    if (OpenClipboard(NULL)) {
+        EmptyClipboard();
+        size_t  size = (strInput.length() + 1) * sizeof(wchar_t);
+        HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, size);
+        if (hMem != NULL) {
+            wchar_t *pMem = (wchar_t *)GlobalLock(hMem);
+            if (pMem != NULL) {
+                memcpy(pMem, strInput.c_str(), size);
+                GlobalUnlock(hMem);
+                SetClipboardData(CF_UNICODETEXT, hMem);
+            }
+        }
+        CloseClipboard();
+        std::wcout << L"\n文本已复制到剪贴板。" << std::endl;
+    } else {
+        std::wcout << L"\n复制到剪贴板失败。" << std::endl;
+    }
+
+#endif
+
+#if 0
+/* 文本去除换行符功能 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    // 设置控制台输出编码为 UTF-8
+    SetConsoleOutputCP(CP_UTF8);
+    // 设置控制台输入编码为 UTF-8
+    SetConsoleCP(CP_UTF8);
+    std::string line;
+    std::string strInput;
+
+    std::cout << "请输入文本（输入完成后按Ctrl+Z然后回车结束输入）：" << std::endl;
+
+    // 读取多行输入，直到EOF (Ctrl+Z)
+    while (std::getline(std::cin, line)) {
+        if (line == "q" || line == "Q") {
+            break;
+        }
+        strInput += line;
+    }
+
+    // 移除所有的换行符和回车符
+    strInput.erase(std::remove(strInput.begin(), strInput.end(), '\n'), strInput.end());
+    strInput.erase(std::remove(strInput.begin(), strInput.end(), '\r'), strInput.end());
+
+    std::cout << "\n处理后的文本：\n" << strInput << std::endl;
+
+    // 复制到剪贴板
+    if (OpenClipboard(NULL)) {
+        EmptyClipboard();
+        HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, strInput.size() + 1);
+        if (hMem != NULL) {
+            char* pMem = (char*)GlobalLock(hMem);
+            if (pMem != NULL) {
+                memcpy(pMem, strInput.c_str(), strInput.size() + 1);
+                GlobalUnlock(hMem);
+                SetClipboardData(CF_TEXT, hMem);
+            }
+        }
+        CloseClipboard();
+        std::cout << "\n文本已复制到剪贴板。" << std::endl;
+    } else {
+        std::cout << "\n复制到剪贴板失败。" << std::endl;
+    }
+    /* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+#if 0
+    /* io stream迭代器使用 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    istream_iterator<string> is(cin);
+    istream_iterator<string> eof;
+    vector<string>           text;
+    copy(is, eof, back_inserter(text));
+    sort(text.begin(), text.end());
+    ostream_iterator<string> os(cout, " ");
+    copy(text.begin(), text.end(), os);
+/* 结论： */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+#if 0
+    /* 模板重载测试 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
+    string strT1("hello");
+    char   iT2 = 0xFF;
+
+    int iNUm = 3;
+
+    DisplayMsg<int>(strT1, iNUm);
+    DisplayMsg<int>(iT2, iNUm);
+    DisplayMsg<long>(iT2);
+
+    DisplayMsg<char>(iT2);
+
+    char      i                       = 's';
+    int       ddwadawdawdawdawdawdawd = 1;
+    long long dwad                    = 123;
+
+/* 结论：可以更换参数，可以特化模板，可以两种机制同时使用。 */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+#if 0
     /* 基础模块测试 */
     /* ┎─────────────────────────────────────────────────────────────────┒ */
     HelloBasicFunc();
     /* 结论： */
     /* ┗─────────────────────────────────────────────────────────────────┚ */
-    #endif
-
+#endif
 
 #if 0
     /* 定时器类测试 */
