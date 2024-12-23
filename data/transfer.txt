@@ -1,4 +1,782 @@
 
+/**
+ * @file StationDataDefine.hxx
+ * @author wanjuncong (juncong.wan@hollyland-tech.com)
+ * @brief 主站相关的数据声明，主站包括MS和RRU，可能还有面板，充电座，扩展板等
+ * @version 0.1
+ * @date 2024-09-20
+ *
+ * @copyright Copyright (c) 2024 Shenzhen HollylandTechnology Co.,Ltd
+ *
+ */
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef __STATION_DATA_DEFINE__
+#define __STATION_DATA_DEFINE__
+/* Includes ------------------------------------------------------------------*/
+#include "DevDataDefine.hxx"
+
+/* Define --------------------------------------------------------------------*/
+
+/* Declaration ---------------------------------------------------------------*/
+namespace DevMng
+{
+/* 设备Config类型 ----------------------------------------------------------------*/
+struct DevBasicConfig : public DevData_t  // 设备基本参数配置
+{
+    string m_strDevNmae;      /* 设备名称 */
+    string m_strLanguage;     /* 设备语言 */
+    string m_strCountryCode;  // 国家码
+    DevBasicConfig()
+        : m_strDevNmae("Device")
+        , m_strLanguage("chinese")
+        , m_strCountryCode("")
+    {
+    }
+    bool operator==(const DevBasicConfig& t) const
+    {
+        return ((this->m_strDevNmae == t.m_strDevNmae) && (this->m_strLanguage == t.m_strLanguage)
+                && (this->m_strCountryCode == t.m_strCountryCode));
+    }
+    DevBasicConfig& operator=(const DevBasicConfig& t)
+    {
+        this->m_strDevNmae     = t.m_strDevNmae;
+        this->m_strLanguage    = t.m_strLanguage;
+        this->m_strCountryCode = t.m_strCountryCode;
+        return *this;
+    }
+};
+
+using MsBasicConfig = DevBasicConfig;
+
+struct RruBasicConfig : public DevBasicConfig /* RRU设备基本参数配置 */
+{
+    int m_iLightValue;    /* 低亮度阈值 单位：  s*/
+    int m_iLcdTime;       /* 屏保时间 单位：  s*/
+    int m_iLightLedValue; /*屏幕待机亮度*/
+    RruBasicConfig()
+        : m_iLightValue(100)
+        , m_iLcdTime(100)
+        , m_iLightLedValue(10)
+    {
+    }
+    bool operator==(const RruBasicConfig& t) const
+    {
+        return ((this->m_strDevNmae == t.m_strDevNmae) && (this->m_strLanguage == t.m_strLanguage)
+                && (this->m_iLightValue == t.m_iLightValue) && (this->m_iLcdTime == t.m_iLcdTime)
+                && (this->m_strCountryCode == t.m_strCountryCode) && (this->m_iLightLedValue == t.m_iLightLedValue));
+    }
+    RruBasicConfig& operator=(const RruBasicConfig& t)
+    {
+        this->m_strDevNmae     = t.m_strDevNmae;
+        this->m_strLanguage    = t.m_strLanguage;
+        this->m_iLightValue    = t.m_iLightValue;
+        this->m_iLcdTime       = t.m_iLcdTime;
+        this->m_strCountryCode = t.m_strCountryCode;
+        this->m_iLightLedValue = t.m_iLightLedValue;
+        return *this;
+    }
+};
+
+struct AudioConfig : public DevData_t /* 音频设置 */
+{
+    int m_iDevAudioPort; /* 音频端口 */
+    int m_iBitDepth;     /* 位深度 */
+    int m_iSampleRate;   /* 采样率 */
+    int m_iPayloadType;  /* 音频数据类型 */
+    AudioConfig()
+        : m_iDevAudioPort(0)
+        , m_iBitDepth(32)
+        , m_iSampleRate(22000)
+        , m_iPayloadType(0)
+    {
+    }
+    bool operator==(const AudioConfig& t) const
+    {
+        return ((this->m_iDevAudioPort == t.m_iDevAudioPort) && (this->m_iBitDepth == t.m_iBitDepth)
+                && (this->m_iSampleRate == t.m_iSampleRate) && (this->m_iPayloadType == t.m_iPayloadType));
+    }
+    AudioConfig& operator=(const AudioConfig& t)
+    {
+        this->m_iDevAudioPort = t.m_iDevAudioPort;
+        this->m_iBitDepth     = t.m_iBitDepth;
+        this->m_iSampleRate   = t.m_iSampleRate;
+        this->m_iPayloadType  = t.m_iPayloadType;
+        return *this;
+    }
+};
+
+struct NetConfig : public DevData_t  //网络参数
+{
+    std::string strType;  //网络类型：static/dhcp/wifi
+    std::string strLocalNetIp;
+    std::string strLocalNetMask;    /* 子网掩码 */
+    std::string strLocalNetGateWay; /* 网关 */
+
+    NetConfig()
+        : strType("NoIP")
+        , strLocalNetIp("192.168.218.10")
+        , strLocalNetMask("255.255.255.0")
+        , strLocalNetGateWay("")
+    {
+    }
+    bool operator==(const NetConfig& t) const
+    {
+        return ((this->strType == t.strType) && (this->strLocalNetIp == t.strLocalNetIp)
+                && (this->strLocalNetMask == t.strLocalNetMask) && (this->strLocalNetGateWay == t.strLocalNetGateWay));
+    }
+    NetConfig& operator=(const NetConfig& t)
+    {
+        this->strType            = t.strType;
+        this->strLocalNetIp      = t.strLocalNetIp;
+        this->strLocalNetMask    = t.strLocalNetMask;
+        this->strLocalNetGateWay = t.strLocalNetGateWay;
+        return *this;
+    }
+};
+
+struct Wire4Config  //4线参数配置
+{
+    int8_t m_iLineNum;     /* 四线接口编号 目前固定为0 */
+    int8_t m_iInputGain;   //输入增益
+    int8_t m_iOutputGain;  //输出增益
+    int8_t m_iLineSeq;     //相序模式 0：标准模式（默认） 1：交叉模式
+
+    Wire4Config()
+        : m_iLineNum(0)
+        , m_iInputGain(0)
+        , m_iOutputGain(0)
+        , m_iLineSeq(0)
+    {
+    }
+    bool operator==(const Wire4Config& t) const
+    {
+        return ((this->m_iLineNum == t.m_iLineNum) && (this->m_iInputGain == t.m_iInputGain)
+                && (this->m_iOutputGain == t.m_iOutputGain) && (this->m_iLineSeq == t.m_iLineSeq));
+    }
+    Wire4Config& operator=(const Wire4Config& t)
+    {
+        this->m_iLineNum    = t.m_iLineNum;
+        this->m_iInputGain  = t.m_iInputGain;
+        this->m_iOutputGain = t.m_iOutputGain;
+        this->m_iLineSeq    = t.m_iLineSeq;
+        return *this;
+    }
+};
+
+struct AllWire4Config : public DevData_t
+{
+    vector<Wire4Config> m_vecWire4ConfigList;
+
+    bool operator==(const AllWire4Config& t) const
+    {
+        return ((this->m_vecWire4ConfigList == t.m_vecWire4ConfigList));
+    }
+};
+
+struct Wire2Config /* 单个2线参数配置 */
+{
+    int8_t      m_iLineNum;     //二线接口编号 只有一组2线，该值固定为0
+    int8_t      m_iInputGain;   //输入增益
+    int8_t      m_iOutputGain;  //输出增益
+    int8_t      m_iLineSeq;     /* 线序模式 */
+    int         m_strCable;     //线长补偿
+    bool        m_bRessitance;  //端接电阻
+    bool        m_bZero;        //调零
+    std::string m_strLineMode;  //2线模式切换  /* 值为ClearCom或RTS */
+
+    Wire2Config()
+        : m_iLineNum(0)
+        , m_iInputGain(0)
+        , m_iOutputGain(0)
+        , m_iLineSeq(0)
+        , m_strCable(50)
+        , m_bRessitance(false)
+        , m_bZero(false)
+        , m_strLineMode("ClearCom")
+    {
+    }
+    bool operator==(const Wire2Config& t) const
+    {
+        return ((this->m_iLineNum == t.m_iLineNum) && (this->m_iInputGain == t.m_iInputGain)
+                && (this->m_iOutputGain == t.m_iOutputGain) && (this->m_iLineSeq == t.m_iLineSeq)
+                && (this->m_strCable == t.m_strCable) && (this->m_bRessitance == t.m_bRessitance)
+                && (this->m_bZero == t.m_bZero) && (this->m_strLineMode == t.m_strLineMode));
+    }
+    Wire2Config& operator=(const Wire2Config& t)
+    {
+        this->m_iLineNum    = t.m_iLineNum;
+        this->m_iInputGain  = t.m_iInputGain;
+        this->m_iOutputGain = t.m_iOutputGain;
+        this->m_iLineSeq    = t.m_iLineSeq;
+        this->m_strCable    = t.m_strCable;
+        this->m_bRessitance = t.m_bRessitance;
+        this->m_bZero       = t.m_bZero;
+        this->m_strLineMode = t.m_strLineMode;
+        return *this;
+    }
+};
+struct AllWire2Config : public DevData_t
+{
+    vector<Wire2Config> m_vecWire2ConfigList;
+
+    bool operator==(const AllWire2Config& t) const
+    {
+        return ((this->m_vecWire2ConfigList == t.m_vecWire2ConfigList));
+    }
+};
+
+struct UacConfig : public DevData_t /* 设备UAC设置 */
+{
+    int m_iInputGain;  /* 输入增益 */
+    int m_iOutputGain; /* 输出增益 */
+
+    UacConfig()
+        : m_iInputGain(0)
+        , m_iOutputGain(0)
+    {
+    }
+    bool operator==(const UacConfig& t) const
+    {
+        return ((this->m_iInputGain == t.m_iInputGain) && (this->m_iOutputGain == t.m_iOutputGain));
+    }
+    UacConfig& operator=(const UacConfig& t)
+    {
+        this->m_iInputGain  = t.m_iInputGain;
+        this->m_iOutputGain = t.m_iOutputGain;
+        return *this;
+    }
+};
+
+struct InterConfig : public DevData_t /* 仅MS存在 */
+{
+    int  m_iInputGain;   //输入增益
+    int  m_iOutputGain;  //输出增益
+    bool m_iVoxSwitch;   /* vox开关 */
+
+    InterConfig()
+        : m_iInputGain(0)
+        , m_iOutputGain(0)
+        , m_iVoxSwitch(false)
+    {
+    }
+    bool operator==(const InterConfig& t) const
+    {
+        return ((this->m_iInputGain == t.m_iInputGain) && (this->m_iOutputGain == t.m_iOutputGain)
+                && (this->m_iVoxSwitch == t.m_iVoxSwitch));
+    }
+    InterConfig& operator=(const InterConfig& t)
+    {
+        this->m_iInputGain  = t.m_iInputGain;
+        this->m_iOutputGain = t.m_iOutputGain;
+        this->m_iVoxSwitch  = t.m_iVoxSwitch;
+        return *this;
+    }
+};
+
+struct AnnounceConfig : public DevData_t /* 仅MS存在 */
+{
+    int m_iOutputGain;  //输出增益
+
+    AnnounceConfig()
+        : m_iOutputGain(0)
+    {
+    }
+    bool operator==(const AnnounceConfig& t) const
+    {
+        return ((this->m_iOutputGain == t.m_iOutputGain));
+    }
+    AnnounceConfig& operator=(const AnnounceConfig& t)
+    {
+        this->m_iOutputGain = t.m_iOutputGain;
+        return *this;
+    }
+};
+
+struct PgmConfig : public DevData_t  //PGM参数配置 /* 仅MS存在 */
+{
+    int8_t m_iInputGain; /* 输入 */
+
+    PgmConfig()
+        : m_iInputGain(0)
+    {
+    }
+    bool operator==(const PgmConfig& t) const
+    {
+        return ((this->m_iInputGain == t.m_iInputGain));
+    }
+    PgmConfig& operator=(const PgmConfig& t)
+    {
+        this->m_iInputGain = t.m_iInputGain;
+        return *this;
+    }
+};
+
+struct MicroConfig : public DevData_t /* 仅MS存在 */
+{
+    int m_iCapacitiveInputGain; /* 电容麦输入增益 */
+    int m_iCircularInputGain;   /* 动圈麦输入增益 */
+
+    MicroConfig()
+        : m_iCapacitiveInputGain(0)
+        , m_iCircularInputGain(0)
+    {
+    }
+    bool operator==(const MicroConfig& t) const
+    {
+        return ((this->m_iCapacitiveInputGain == t.m_iCapacitiveInputGain)
+                && (this->m_iCircularInputGain == t.m_iCircularInputGain));
+    }
+    MicroConfig& operator=(const MicroConfig& t)
+    {
+        this->m_iCapacitiveInputGain = t.m_iCapacitiveInputGain;
+        this->m_iCircularInputGain   = t.m_iCircularInputGain;
+        return *this;
+    }
+};
+
+struct DectConfig : public DevData_t /* DECT的设置 */ /* 仅RRU存在 */
+{
+    string  m_strBsId;        /* RTX的注册ID */
+    string  m_strCountryCode; /* RTX国家码设置
+                                EU,                 0x00
+                                US,                 0x01
+                                SA,                 0x02
+                                TAIWAN,             0x03
+                                THAILAND,           0x06
+                                US_IN_EU_FREQ,      0x13
+                                JAPAN,              0x15
+                                JAPAN_IN_EU_FREQ,   0x16
+                                BRAZIL,             0x19
+                                CHILE,              0x1C
+                                URUGUAY,            0x1D
+                                AUTO,               0xFA
+                                USE_NVS,            0xFB
+                                CHINA,              0xFE */
+    uint8_t m_iAudioIntf;     /* 音频接口类型（如Combridge） */
+    uint8_t m_iAudioMode;     /* RTX混音模式 */
+    uint8_t m_iRfLevel;       /* RF功率 */
+    DectConfig()
+        : m_strBsId("")
+        , m_strCountryCode("JAPAN")
+        , m_iAudioIntf(0x50) /* TDM Bridge */
+        , m_iAudioMode(0x00) /* 外部混音 */
+        , m_iRfLevel(0x00)   /* High */
+    {
+    }
+
+    bool operator==(const DectConfig& t) const
+    {
+        return ((this->m_strBsId == t.m_strBsId) && (this->m_strCountryCode == t.m_strCountryCode)
+                && (this->m_iAudioIntf == t.m_iAudioIntf) && (this->m_iAudioMode == t.m_iAudioMode)
+                && (this->m_iRfLevel == t.m_iRfLevel));
+    }
+
+    DectConfig& operator=(const DectConfig& t)
+    {
+        this->m_strBsId        = t.m_strBsId;
+        this->m_strCountryCode = t.m_strCountryCode;
+        this->m_iAudioIntf     = t.m_iAudioIntf;
+        this->m_iAudioMode     = t.m_iAudioMode;
+        this->m_iRfLevel       = t.m_iRfLevel;
+        return *this;
+    }
+};
+
+struct DevVersionInfoConfig : public DevData_t /* 设备版本信息 */
+{
+    std::string m_strHwNum;     /* 硬件编号 */
+    std::string m_strHwVersion; /* 硬件版本号 */
+    std::string m_strSwVersion; /* 软件版本号 */
+
+    DevVersionInfoConfig()
+        : m_strHwNum("DEV_HW")
+        , m_strHwVersion("Hxxx")
+        , m_strSwVersion("Vxxx")
+    {
+    }
+    bool operator==(const DevVersionInfoConfig& t) const
+    {
+        return ((this->m_strHwNum == t.m_strHwNum) && (this->m_strHwVersion == t.m_strHwVersion)
+                && (this->m_strSwVersion == t.m_strSwVersion));
+    }
+    DevVersionInfoConfig& operator=(const DevVersionInfoConfig& t)
+    {
+        this->m_strHwNum     = t.m_strHwNum;
+        this->m_strHwVersion = t.m_strHwVersion;
+        this->m_strSwVersion = t.m_strSwVersion;
+        return *this;
+    }
+};
+
+struct AudioObjArray
+{
+    string m_strObjId;
+    int    m_iWireMode;
+    AudioObjArray()
+        : m_strObjId("CH-1")
+        , m_iWireMode(3)
+    {
+    }
+
+    bool operator==(const AudioObjArray& t) const
+    {
+        return ((this->m_strObjId == t.m_strObjId) && (this->m_iWireMode == t.m_iWireMode));
+    }
+};
+
+struct WiredDevGroupConfig
+{
+    string                m_strWireObjId;  // wireObjId
+    bool                  m_bCallEnable;   //是否支持Call
+    string                m_strWireName;
+    int8_t                m_iPriority;
+    vector<AudioObjArray> m_VcAudioSrcGrp;
+
+    WiredDevGroupConfig()
+        : m_strWireObjId("")
+        , m_bCallEnable(false)
+        , m_strWireName("")
+        , m_iPriority(0xFF)
+    {
+        m_VcAudioSrcGrp.clear();
+        AudioObjArray stAudioObj;
+        m_VcAudioSrcGrp.push_back(stAudioObj);
+    }
+
+    bool operator==(const WiredDevGroupConfig& t) const
+    {
+        return ((this->m_strWireObjId == t.m_strWireObjId) && (this->m_bCallEnable == t.m_bCallEnable)
+                && (this->m_strWireName == t.m_strWireName) && (this->m_iPriority == t.m_iPriority)
+                && (this->m_VcAudioSrcGrp == t.m_VcAudioSrcGrp));
+    }
+};
+
+struct AllWiredDevGroupConfig : public DevData_t
+{
+    vector<WiredDevGroupConfig> m_vecAllWiredDevGroupConfig;
+
+    AllWiredDevGroupConfig()
+    {
+    }
+    bool operator==(const AllWiredDevGroupConfig& t) const
+    {
+        return ((this->m_vecAllWiredDevGroupConfig == t.m_vecAllWiredDevGroupConfig));
+    }
+};
+
+struct HttpFileInfo : public DevData_t
+{
+    string strRoleFileMd5;
+    string strRoleFileUrl;  //RoleFile下载URL
+    string strPpFileMd5;
+    string strPpFileUrl;
+
+    HttpFileInfo()
+        : strRoleFileMd5("")
+        , strRoleFileUrl("")
+        , strPpFileMd5("")
+        , strPpFileUrl("")
+    {
+    }
+    bool operator==(const HttpFileInfo& t) const
+    {
+        return ((this->strRoleFileMd5 == t.strRoleFileMd5) && (this->strRoleFileUrl == t.strRoleFileUrl)
+                && (this->strPpFileMd5 == t.strPpFileMd5) && (this->strPpFileUrl == t.strPpFileUrl));
+    }
+};
+
+/* 设备State类型 ----------------------------------------------------------------*/
+struct DevState : public DevData_t /* 设备基本状态 */
+{
+    bool m_IsAudiobTransfer;  /* 音频链路是否启动 */
+    bool m_IsPgmOnline;       /* PGM接入状态 */
+    bool m_IsHeadsetOnline;   /* 耳机接入状态 */
+    bool m_IsUacOnline;       /* UAC接入状态 */
+    bool m_IsNfcOpen;         /* NFC启用状态 */
+    bool m_IsBtOpen;          /* 蓝牙启用状态 */
+    bool m_IsWifiOpen;        /* WiFi启用状态 */
+    bool m_IsConnectInternet; /* 是否连接到外网 */
+
+    DevState()
+        : m_IsAudiobTransfer(false)
+        , m_IsPgmOnline(false)
+        , m_IsHeadsetOnline(false)
+        , m_IsUacOnline(false)
+        , m_IsNfcOpen(false)
+        , m_IsBtOpen(false)
+        , m_IsWifiOpen(false)
+        , m_IsConnectInternet(false)
+    {
+    }
+    bool operator==(const DevState& t) const
+    {
+        return ((this->m_IsAudiobTransfer == t.m_IsAudiobTransfer) && (this->m_IsPgmOnline == t.m_IsPgmOnline)
+                && (this->m_IsHeadsetOnline == t.m_IsHeadsetOnline) && (this->m_IsUacOnline == t.m_IsUacOnline)
+                && (this->m_IsNfcOpen == t.m_IsNfcOpen) && (this->m_IsBtOpen == t.m_IsBtOpen)
+                && (this->m_IsWifiOpen == t.m_IsWifiOpen) && (this->m_IsConnectInternet == t.m_IsConnectInternet));
+    }
+};
+
+using MsState = DevState;
+
+struct RruState : DevState /* 仅限RRU */
+{
+    int m_iBattery; /* 设备电量, 值为-1时代表POE供电 */
+
+    RruState()
+        : m_iBattery(0)
+    {
+    }
+
+    bool operator==(const RruState& t) const
+    {
+        if (!DevState::operator==(t)) {
+            return false;
+        }
+        return (m_iBattery == t.m_iBattery);
+    }
+};
+
+struct PairState : public DevData_t /* 配对状态 */
+{
+    bool   m_IsPairing;          /* 是否配对中 */
+    int    m_UsableSum;          /* 可分配的数量 */
+    string m_strUsablePPNumList; /* 可分配的PPNum */
+
+    PairState()
+        : m_IsPairing(false)
+        , m_UsableSum(80)
+    {
+    }
+    bool operator==(const PairState& t) const
+    {
+        return ((this->m_IsPairing == t.m_IsPairing) && (this->m_UsableSum == t.m_UsableSum)
+                && (this->m_strUsablePPNumList == t.m_strUsablePPNumList));
+    }
+    PairState& operator=(const PairState& t)
+    {
+        this->m_IsPairing          = t.m_IsPairing;
+        this->m_UsableSum          = t.m_UsableSum;
+        this->m_strUsablePPNumList = t.m_strUsablePPNumList;
+        return *this;
+    }
+};
+
+struct WebUserState : public DevData_t /* Web用户状态 */
+{
+    int         m_UserType;   /* 用户类型 */
+    std::string m_UserName;   /* 用户名称*/
+    std::string m_UserPasswd; /* 用户密码 */
+    bool        m_IsLogin;    /* 用户是否已登录当前设备的web */
+
+    WebUserState()
+        : m_UserType(0)
+        , m_UserName("UserNone")
+        , m_UserPasswd("None")
+        , m_IsLogin(false)
+    {
+    }
+    bool operator==(const WebUserState& t) const
+    {
+        return ((this->m_UserType == t.m_UserType) && (this->m_UserName == t.m_UserName)
+                && (this->m_UserPasswd == t.m_UserPasswd) && (this->m_IsLogin == t.m_IsLogin));
+    }
+    WebUserState& operator=(const WebUserState& t)
+    {
+        this->m_UserType   = t.m_UserType;
+        this->m_UserName   = t.m_UserName;
+        this->m_UserPasswd = t.m_UserPasswd;
+        this->m_IsLogin    = t.m_IsLogin;
+        return *this;
+    }
+};
+
+struct DevKey /* MS的面板按键设置 仅MS存在 */
+{
+    using ObjId = string;
+
+    int           m_iKeyNum;          /* 范围 0 ~ 7 ： 按键1~按键8 */
+    string        m_strKeyLedColor;   /* 按键灯颜色，RGB格式，例如白色（255, 255, 255） */
+    int           m_iKeyLedBright;    /* 按键灯亮度 范围0~100 */
+    int           m_iKeyMode;         /* 按键通话权限 0：不听也不说,
+                                            1： 只说,
+                                            2： 只听,
+                                            3： 说&强制听,
+                                            4：reply模式, 默认没有配置就是0 */
+    int           m_iKeyVol;          /* 输出增益，范围：0~100 */
+    vector<ObjId> m_vecAudioObjArray; /* 通话对象 为0表示不支持该功能 */
+    vector<ObjId> m_CallObjArray;     /* call对象 为0表示不支持该功能 */
+
+    DevKey()
+        : m_iKeyNum(0)
+        , m_strKeyLedColor("(255, 255, 255)")
+        , m_iKeyLedBright(100)
+        , m_iKeyMode(0)
+        , m_iKeyVol(50)
+    {
+    }
+    bool operator==(const DevKey& t) const
+    {
+        return ((this->m_iKeyNum == t.m_iKeyNum) && (this->m_strKeyLedColor == t.m_strKeyLedColor)
+                && (this->m_iKeyLedBright == t.m_iKeyLedBright) && (this->m_iKeyMode == t.m_iKeyMode)
+                && (this->m_iKeyVol == t.m_iKeyVol) && (this->m_vecAudioObjArray == t.m_vecAudioObjArray)
+                && (this->m_CallObjArray == t.m_CallObjArray));
+    }
+};
+
+struct AllDevKeyConfig : public DevData_t /* 按键参数列表,仅MS存在 */
+{
+    vector<DevKey> m_vecDevKeyList;
+
+    bool operator==(const AllDevKeyConfig& t) const
+    {
+        return ((this->m_vecDevKeyList == t.m_vecDevKeyList));
+    }
+};
+
+struct WiredDevState
+{
+    string          m_strWireType; /* 有线类型 UAC，4W，2W等*/
+    string          m_strWireNum;  /* 有线编号 1~10 */
+    string          m_strWireId;
+    int             m_iWireChannel;
+    vector<ChState> m_vecChStateArray;
+
+    WiredDevState()
+        : m_strWireType("NONE")
+        , m_strWireNum("NONE")
+        , m_strWireId(0)
+        , m_iWireChannel(0)
+    {
+    }
+
+    bool operator==(const WiredDevState& t) const
+    {
+        return ((this->m_strWireType == t.m_strWireType) && (this->m_strWireNum == t.m_strWireNum)
+                && (this->m_strWireId == t.m_strWireId) && (this->m_iWireChannel == t.m_iWireChannel)
+                && (this->m_vecChStateArray == t.m_vecChStateArray));
+    }
+};
+
+struct AllWiredDevState : public DevData_t
+{
+    vector<WiredDevState> m_WiredDevList;
+
+    bool operator==(const AllWiredDevState& t) const
+    {
+        return ((this->m_WiredDevList == t.m_WiredDevList));
+    }
+};
+
+/**
+ * @brief 设备角色信息
+ *
+ * @attention 设计该属性是为了方便部分模块判断角色，注意目前（2024年11月14日）只有获本地设备的角色信息才有效
+ * 获取其他设备的数据是无效的。
+ *
+ */
+struct StationRoleInfo : public DevData_t
+{
+    enum RoleType
+    {
+        EM_ROLE_MASTER,
+        EM_ROLE_SLAVE,
+        EM_ROLE_MAX,
+    };
+
+    RoleType m_emRoleType;   //分配的角色
+    string   m_strMasterId;  //所属主机的ID
+    string   m_strMasterIp;  //所属主机的Ip
+    int      m_iMasterPort;  //所属主机的级联端口
+
+    StationRoleInfo()
+        : m_emRoleType(EM_ROLE_MASTER)
+        , m_strMasterId("NONE")
+        , m_strMasterIp("NONE")
+        , m_iMasterPort(-1)
+    {
+    }
+
+    bool operator==(const StationRoleInfo& t) const
+    {
+        return ((this->m_emRoleType == t.m_emRoleType) && (this->m_strMasterId == t.m_strMasterId)
+                && (this->m_strMasterIp == t.m_strMasterIp) && (this->m_iMasterPort == t.m_iMasterPort));
+    }
+};
+
+/* 分组相关内容 ----------------------------------------------------------------*/
+struct ChConfig /* 设备分组设置 */ /* 级联325接口出现 */
+{
+    int    m_iChNum;              /* CH编号 */
+    string m_strChId; /* CH ID*/  //格式为"CH-1", "CH-2"
+    string m_strChName;           /* CH名称 用户自定义名称*/
+
+    ChConfig()
+        : m_iChNum(1)
+        , m_strChId("CH-1")
+        , m_strChName("CH1")
+    {
+    }
+
+    bool operator==(const ChConfig& t) const
+    {
+        return ((this->m_iChNum == t.m_iChNum) && (this->m_strChName == t.m_strChName)
+                && (this->m_strChId == t.m_strChId));
+    }
+};
+
+struct AllChConfig : public DevData_t
+{
+    vector<ChConfig> m_ChConfigList;
+    bool             m_bOneGroupMode;  //一分组模式
+
+    AllChConfig()
+        : m_bOneGroupMode(true)
+    {
+    }
+    bool operator==(const AllChConfig& t) const
+    {
+        return ((this->m_ChConfigList == t.m_ChConfigList) && (this->m_bOneGroupMode == t.m_bOneGroupMode));
+    }
+};
+
+struct ChannelConfig
+{
+    int8_t m_iChnNum;
+    string strChnName;
+    int8_t m_iChnMode;     //通道权限， 0:不听不说;  1:只说;2:只听;3:说&强制听;
+    int8_t m_iOutputGain;  //通道增益
+
+    ChannelConfig()
+        : m_iChnNum(1)
+        , strChnName("CH-1")
+        , m_iChnMode(0)
+        , m_iOutputGain(70)
+    {
+    }
+
+    bool operator==(const ChannelConfig& t) const
+    {
+        return ((this->m_iChnNum == t.m_iChnNum) && (this->strChnName == t.strChnName)
+                && (this->m_iChnMode == t.m_iChnMode) && (this->m_iOutputGain == t.m_iOutputGain));
+    }
+    ChannelConfig& operator=(const ChannelConfig& t)
+    {
+        this->m_iChnNum     = t.m_iChnNum;
+        this->strChnName    = t.strChnName;
+        this->m_iChnMode    = t.m_iChnMode;
+        this->m_iOutputGain = t.m_iOutputGain;
+        return *this;
+    }
+};
+
+}  // namespace DevMng
+
+/* Class ---------------------------------------------------------------------*/
+#endif /* __STATION_DATA_DEFINE__ */
+       /* End of file ---------------------------------------------------------------*/
+
+
     string        strPipe = argv[1];
     std::ifstream file(strPipe);
     if (!file.is_open()) {
@@ -14,4 +792,19 @@
         std::cout << "read content: " << content << std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
-    file.close();
+
+    string        strPipe = argv[1];
+    std::ifstream file(strPipe);
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file!" << strPipe << std::endl;
+        return 1;
+    }
+
+    std::string content;
+    while (1) {
+        file.seekg(0, std::ios::beg);
+        content.assign((std::istreambuf_iterator<char>(file)),
+                       std::istreambuf_iterator<char>());
+        std::cout << "read content: " << content << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    }
