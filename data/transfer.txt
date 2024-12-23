@@ -1,0 +1,17 @@
+
+    string        strPipe = argv[1];
+    std::ifstream file(strPipe);
+    if (!file.is_open()) {
+        std::cerr << "Unable to open file!" << strPipe << std::endl;
+        return 1;
+    }
+
+    std::string content;
+    while (1) {
+        file.seekg(0, std::ios::beg);
+        content.assign((std::istreambuf_iterator<char>(file)),
+                       std::istreambuf_iterator<char>());
+        std::cout << "read content: " << content << std::endl;
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    }
+    file.close();
