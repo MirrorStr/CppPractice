@@ -7,8 +7,7 @@
 COLOR_RED="\x1b[31m"
 COLOR_GREEN="\x1b[38;5;82m"
 COLOR_YELLOW="\x1b[33m"
-COLOR_PURPLE="\x1b[48;5;93m"
-
+ 
 COLOR_GREEN_BACK="\x1b[48;5;28m"
 COLOR_RED_BACK="\x1b[41m"
 COLOR_YELLOW_BACK="\x1b[43m"
@@ -31,7 +30,7 @@ git add *
 
 git commit -m  "transfer txt $(date)"
 
-git push msger
+git push origin msger
 
 echo -e "\n----------------------------------------"
 echo -e ${COLOR_GREEN_BACK} ${COLOR_HIGHLIGHT}"+=+=+=+=+ ${PorjectName} ${Head} has finished running. +=+=+=+=+"${COLOR_RESET}
