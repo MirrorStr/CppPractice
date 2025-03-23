@@ -20,18 +20,26 @@
 #include <string>
 #include <thread>
 #include <vector>
-#include <windows.h>
-
-#include "json/json.h" /* CPP json库头文件 */
+// #include <windows.h> # 通过宏定义控制包含
+// #include "json/json.h" /* CPP json库头文件 */
+#include <fmt/core.h>
 
 #include "BasicFunc.hh"
 #include "WhiteBorad.hh" /* 测试，验证功能用的模块 */
 
 using namespace std;
 
-int main() {
-
+int main(int argc, char const *argv[])  {
 #if 1
+/* fmt库引入和vcpkg测试 */
+/* ┎─────────────────────────────────────────────────────────────────┒ */
+    fmt::print("Hello World! From fmt\n");
+/* 结论： */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+
+#if 0
     /* 验证循环输入函数 */
     /* ┎─────────────────────────────────────────────────────────────────┒ */
 

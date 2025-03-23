@@ -6,6 +6,9 @@ build
 lib
 bin
 
+# 忽略文件
+CMakeUserPresets.json
+
 # Prerequisites
 *.d
 
