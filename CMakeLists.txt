@@ -19,6 +19,7 @@ set(CMAKE_TOOLCHAIN_FILE "/home/wanjuncong/PARA/resource/vcpkg-master/scripts/bu
 # 查找fmt库
 find_package(fmt REQUIRED)
 find_package(jsoncpp REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
 
 add_executable(main main.cc)
 
@@ -32,6 +33,7 @@ target_link_libraries(main PUBLIC
 target_link_libraries(main PRIVATE 
     fmt::fmt
     JsonCpp::JsonCpp
+    spdlog::spdlog
 )
 
 # 使用动态库 继续添加json库

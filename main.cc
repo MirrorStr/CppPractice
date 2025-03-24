@@ -22,7 +22,10 @@
 #include <vector>
 // #include <windows.h> # 通过宏定义控制包含
 #include <json/json.h> /* CPP json库头文件 */
-#include <fmt/core.h>
+#include <fmt/core.h>   /* fmt格式化库 */
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/basic_file_sink.h> // 文件日志支持
+
 
 #include "BasicFunc.hh"
 #include "WhiteBorad.hh" /* 测试，验证功能用的模块 */
@@ -31,8 +34,35 @@ using namespace std;
 
 int main(int argc, char const *argv[])  {
 
-
 #if 1
+/* spdlog测试验证 */
+/* ┎─────────────────────────────────────────────────────────────────┒ */
+    // 输出到控制台
+    spdlog::info("Hello, spdlog!(To console)");
+
+    // 格式化日志
+    spdlog::warn("This is a warning with number: {}", 42);
+
+    // 输出到文件
+    std::string strLogFile = "logs/logfile.txt";
+    auto file_logger = spdlog::basic_logger_mt("file_logger", strLogFile);
+    file_logger->info("This is a log message written to a file.File:{}", strLogFile);
+
+    // 设置全局日志级别
+    spdlog::set_level(spdlog::level::debug); // 设置为 debug 级别
+    spdlog::debug("This is a debug message.");
+
+
+    /* 超级循环测试日志打印 */
+    for(int i = 0; i < 100000; i++) {
+        spdlog::info("This is a info message. i:{}", i);
+    }
+
+/* 结论： */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+#if 0
 /* json库测试 */
 /* ┎─────────────────────────────────────────────────────────────────┒ */
     Json::Value jsHello;
