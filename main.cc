@@ -25,16 +25,47 @@
 #include <fmt/core.h>   /* fmt格式化库 */
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h> // 文件日志支持
+#include <spdlog/sinks/stdout_color_sinks.h> // 控制台彩色日志支持
 
 
 #include "BasicFunc.hh"
 #include "WhiteBorad.hh" /* 测试，验证功能用的模块 */
+
+#if 0
+/* 效果一般，不好用 */
+/* ┎─────────────────────────────────────────────────────────────────┒ */
+// 自定义宏，添加文件名、行号和函数名
+#define LOG_INFO(...) spdlog::info("[{}:{}:{}] {}", __FILE__, __LINE__, __FUNCTION__, fmt::format(__VA_ARGS__))
+#define LOG_WARN(...) spdlog::warn("[{}:{}:{}] {}", __FILE__, __LINE__, __FUNCTION__, fmt::format(__VA_ARGS__))
+#define LOG_ERROR(...) spdlog::error("[{}:{}:{}] {}", __FILE__, __LINE__, __FUNCTION__, fmt::format(__VA_ARGS__))
+/* 结论： */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
 
 using namespace std;
 
 int main(int argc, char const *argv[])  {
 
 #if 1
+/* 测试加上宏的日志库打印 */
+/* ┎─────────────────────────────────────────────────────────────────┒ */
+
+    // 创建一个日志器
+    auto console = spdlog::stdout_color_mt("console");
+
+    // 设置日志格式
+    console->set_pattern("[%Y-%m-%d %H:%M:%S.%e] [%^%L%$] [%s:%#] %v");
+
+    // 记录一些日志
+    console->info("This is an info message");
+    console->warn("This is a warning message");
+    console->error("This is an error message");
+/* 结论：格式化都挺好的 但是打印文件和行号估计必须得用宏了。不过用basic_logger_mt替换项目中的mod几要好很多
+对于一般的日志就放到模块专属文件中。重要的日志放到终端中打印*/
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+#if 0
 /* spdlog测试验证 */
 /* ┎─────────────────────────────────────────────────────────────────┒ */
     // 输出到控制台
