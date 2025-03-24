@@ -9,7 +9,7 @@ BuildDir=${SourceDir}/build
 
 echo "${SourceDir}, ${BuildDir}"
 
-if [ -e ${BuildDir} ];then
+if [ ! -d ${BuildDir} ];then
 mkdir ${BuildDir}
 fi
 

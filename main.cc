@@ -21,7 +21,7 @@
 #include <thread>
 #include <vector>
 // #include <windows.h> # 通过宏定义控制包含
-// #include "json/json.h" /* CPP json库头文件 */
+#include <json/json.h> /* CPP json库头文件 */
 #include <fmt/core.h>
 
 #include "BasicFunc.hh"
@@ -30,7 +30,22 @@
 using namespace std;
 
 int main(int argc, char const *argv[])  {
+
+
 #if 1
+/* json库测试 */
+/* ┎─────────────────────────────────────────────────────────────────┒ */
+    Json::Value jsHello;
+    jsHello["Meb1"] = "Hello";
+    jsHello["Meb2"] = 7;
+    jsHello["Meb3"] = true;
+    std::cout << "Print by cout:" <<jsHello << std::endl;
+    fmt::print("jsHello: {}\n", jsHello.toStyledString());
+    /* 结论： */
+/* ┗─────────────────────────────────────────────────────────────────┚ */
+#endif
+
+    #if 0
 /* fmt库引入和vcpkg测试 */
 /* ┎─────────────────────────────────────────────────────────────────┒ */
     fmt::print("Hello World! From fmt\n");

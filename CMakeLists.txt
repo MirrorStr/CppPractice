@@ -15,23 +15,15 @@ set(CMAKE_TOOLCHAIN_FILE "/home/wanjuncong/PARA/resource/vcpkg-master/scripts/bu
 
 ###############################################################################
 # main程序设置 #
-# 头文件路径
-# todo json库后面看用静态还是动态的
-# include_directories(${PROJECT_SOURCE_DIR}/include/jsoncpp)
-
-# # 使用动态库 查找json库
-# find_library(JSONCPP_LIBRARY
-#              NAMES jsoncpp
-#              HINTS ${PROJECT_SOURCE_DIR}/lib/jsoncpp)
 
 # 查找fmt库
 find_package(fmt REQUIRED)
+find_package(jsoncpp REQUIRED)
 
 add_executable(main main.cc)
 
 # 链接库
 target_link_libraries(main PUBLIC 
-    # ${JSONCPP_LIBRARY}
     BasicFuncLib
     lib::WhiteBorad  # 测试用的模块
 )  
@@ -39,6 +31,7 @@ target_link_libraries(main PUBLIC
 # 链接三方库
 target_link_libraries(main PRIVATE 
     fmt::fmt
+    JsonCpp::JsonCpp
 )
 
 # 使用动态库 继续添加json库
