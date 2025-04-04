@@ -1,7 +1,8 @@
 {
   "dependencies": [
     "fmt",
+    "jsoncpp",
     "spdlog",
-    "jsoncpp"
+    "dbus"
   ]
 }

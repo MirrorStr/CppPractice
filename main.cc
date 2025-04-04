@@ -21,12 +21,11 @@
 #include <thread>
 #include <vector>
 // #include <windows.h> # 通过宏定义控制包含
-#include <json/json.h> /* CPP json库头文件 */
-#include <fmt/core.h>   /* fmt格式化库 */
-#include <spdlog/spdlog.h>
-#include <spdlog/sinks/basic_file_sink.h> // 文件日志支持
+#include <fmt/core.h>                        /* fmt格式化库 */
+#include <json/json.h>                       /* CPP json库头文件 */
+#include <spdlog/sinks/basic_file_sink.h>    // 文件日志支持
 #include <spdlog/sinks/stdout_color_sinks.h> // 控制台彩色日志支持
-
+#include <spdlog/spdlog.h>
 
 #include "BasicFunc.hh"
 #include "WhiteBorad.hh" /* 测试，验证功能用的模块 */
@@ -35,20 +34,27 @@
 /* 效果一般，不好用 */
 /* ┎─────────────────────────────────────────────────────────────────┒ */
 // 自定义宏，添加文件名、行号和函数名
-#define LOG_INFO(...) spdlog::info("[{}:{}:{}] {}", __FILE__, __LINE__, __FUNCTION__, fmt::format(__VA_ARGS__))
-#define LOG_WARN(...) spdlog::warn("[{}:{}:{}] {}", __FILE__, __LINE__, __FUNCTION__, fmt::format(__VA_ARGS__))
-#define LOG_ERROR(...) spdlog::error("[{}:{}:{}] {}", __FILE__, __LINE__, __FUNCTION__, fmt::format(__VA_ARGS__))
+#define LOG_INFO(...)                                               \
+    spdlog::info("[{}:{}:{}] {}", __FILE__, __LINE__, __FUNCTION__, \
+                 fmt::format(__VA_ARGS__))
+#define LOG_WARN(...)                                               \
+    spdlog::warn("[{}:{}:{}] {}", __FILE__, __LINE__, __FUNCTION__, \
+                 fmt::format(__VA_ARGS__))
+#define LOG_ERROR(...)                                               \
+    spdlog::error("[{}:{}:{}] {}", __FILE__, __LINE__, __FUNCTION__, \
+                  fmt::format(__VA_ARGS__))
 /* 结论： */
 /* ┗─────────────────────────────────────────────────────────────────┚ */
 #endif
 
 using namespace std;
 
-int main(int argc, char const *argv[])  {
+int main(int argc, char const *argv[])
+{
 
 #if 1
-/* 测试加上宏的日志库打印 */
-/* ┎─────────────────────────────────────────────────────────────────┒ */
+    /* 测试加上宏的日志库打印 */
+    /* ┎─────────────────────────────────────────────────────────────────┒ */
 
     // 创建一个日志器
     auto console = spdlog::stdout_color_mt("console");
@@ -60,7 +66,8 @@ int main(int argc, char const *argv[])  {
     console->info("This is an info message");
     console->warn("This is a warning message");
     console->error("This is an error message");
-/* 结论：格式化都挺好的 但是打印文件和行号估计必须得用宏了。不过用basic_logger_mt替换项目中的mod几要好很多
+/* 结论：格式化都挺好的
+但是打印文件和行号估计必须得用宏了。不过用basic_logger_mt替换项目中的mod几要好很多
 对于一般的日志就放到模块专属文件中。重要的日志放到终端中打印*/
 /* ┗─────────────────────────────────────────────────────────────────┚ */
 #endif
@@ -106,14 +113,13 @@ int main(int argc, char const *argv[])  {
 /* ┗─────────────────────────────────────────────────────────────────┚ */
 #endif
 
-    #if 0
+#if 0
 /* fmt库引入和vcpkg测试 */
 /* ┎─────────────────────────────────────────────────────────────────┒ */
     fmt::print("Hello World! From fmt\n");
 /* 结论： */
 /* ┗─────────────────────────────────────────────────────────────────┚ */
 #endif
-
 
 #if 0
     /* 验证循环输入函数 */
@@ -843,7 +849,8 @@ int adwdawdawdwadwa
     return 0;
 }
 
-void FuncInHead(void) {
+void FuncInHead(void)
+{
     std::cout << "This is a funcation declra in Head.hh but define in main.cc."
               << std::endl;
 }
